@@ -6,7 +6,7 @@ Discrete event simulator
 [![Report Card](https://goreportcard.com/badge/github.com/iti/evt)](https://goreportcard.com/report/github.com/iti/evt) 
 [![Go Reference](https://pkg.go.dev/badge/github.com/iti/evt.svg)](https://pkg.go.dev/github.com/iti/evt) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Coverage](https://img.shields.io/badge/Coverage-86.9%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-0.0%25-red)
 
 ## evt/evtm
 
