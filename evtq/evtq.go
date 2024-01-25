@@ -5,7 +5,7 @@ package evtq
 
 import (
 	"container/heap"
-	"github.com/ITI/vrtime"
+	"github.com/ITI/evt/vrtime"
 	"sync"
 )
 

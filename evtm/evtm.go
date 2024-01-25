@@ -7,8 +7,8 @@ package evtm
 
 import (
 	"fmt"
-	"github.com/ITI/evtq"
-	"github.com/ITI/vrtime"
+	"github.com/ITI/evt/evtq"
+	"github.com/ITI/evt/vrtime"
 	"log"
 	"sync"
 	"time"
