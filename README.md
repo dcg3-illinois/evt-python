@@ -1,7 +1,7 @@
 # evt
 Discrete event simulator
 
-# RngStream
+# evt
 
 [![Report Card](https://goreportcard.com/badge/github.com/iti/evt)](https://goreportcard.com/report/github.com/iti/evt) 
 [![Go Reference](https://pkg.go.dev/badge/github.com/iti/evt.svg)](https://pkg.go.dev/github.com/iti/evt) 
