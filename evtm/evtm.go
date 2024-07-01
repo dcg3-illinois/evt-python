@@ -111,6 +111,7 @@ type EventManager struct {
 	mu        sync.Mutex       // needed for thread safety
 	suspended bool             // true when the thread running the EventManager is waiting for a signal sent when an event is scheduled
 	suspChan  chan bool        //
+	autoPri   int64            // use when time on event being scheduled has a priority of int64(0)
 }
 
 // New creates an empty event queue,
@@ -129,6 +130,7 @@ func New() *EventManager {
 		External:  false,
 		suspended: false,
 		suspChan:  make(chan bool, 1),
+		autoPri:   int64(1),
 		Wallclock: false}
 	return newEm
 }
@@ -351,6 +353,12 @@ func (evtmgr *EventManager) Schedule(context any, data any,
 	if evtMgrTrace {
 		fmt.Printf("enter Schedule entry %d with mutex %v, event time %f\n", eid, evtmgr.mu, evtmgr.Time.Plus(offset).Seconds())
 		log.Printf("enter Schedule entry %d with mutex %v, event time %f\n", eid, evtmgr.mu, evtmgr.Time.Plus(offset).Seconds())
+	}
+
+	// change offset priority if it has a priority of 0
+	if offset.Pri() == int64(0) {
+		offset.SetPri(evtmgr.autoPri)
+		evtmgr.autoPri += 1
 	}
 
 	evtmgr.mu.Lock()

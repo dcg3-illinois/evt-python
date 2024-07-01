@@ -158,9 +158,9 @@ func cmpTime(lhs Time, rhs Time) int {
 	// ticks are equal, compare based on priority, smaller appears before larger
 	lhsPri := lhs.Pri()
 	rhsPri := rhs.Pri()
-	if lhsPri > rhsPri {
+	if lhsPri < rhsPri {
 		return -1
-	} else if lhsPri < rhsPri {
+	} else if lhsPri > rhsPri {
 		return 1
 	}
 	return 0
