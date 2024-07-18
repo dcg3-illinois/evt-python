@@ -20,20 +20,20 @@ import (
 // set it and access it and so use it in any way they like, so long as the
 // ordering constraint is understood.
 
-// TicksPerSecond specifies the frequency of the ticker.  Default is 1e7.
-var TicksPerSecond int64 = 1_000_000
+// SecondPerTick gives a float64 representation of the tick size in seconds.  Default 0.1 ns
+var SecondPerTick float64 = 1e-10
+
+// TicksPerSecond specifies the frequency of the ticker.  Default is 1e9.
+var TicksPerSecond int64 = int64(1.0/SecondPerTick)
 
 // FloatTicksPerSecond gives a float64 representation of the size of number of ticks a second has
 var FloatTicksPerSecond float64 = float64(TicksPerSecond)
-
-// SecondPerTick gives a float64 representation of the tick size in seconds
-var SecondPerTick float64 = 1.0 / FloatTicksPerSecond
 
 // NanoSecPerTick gives a float64 representation of the tick size in nanoseconds
 var NanoSecPerTick int64 = int64((float64(1e9)) * SecondPerTick)
 
 // TickValue gives the size of a tick, in seconds
-var TickValue float64 = 1.0 / FloatTicksPerSecond
+var TickValue float64 = SecondPerTick
 
 // Time measures the number of ticks since the epoch (in
 // TickCnt). The tick count provides a natural ordering
