@@ -109,18 +109,20 @@ func (p *EventQueue) UpdateTime(evtID int, newTime vrtime.Time) {
 // Remove an element. Returns true on success.
 func (p *EventQueue) Remove(evtID int) bool {
 	p.mu.Lock()
-	item, present := p.lookup[evtID]
+	element, present := p.lookup[evtID]
 	if !present {
 		p.mu.Unlock()
 		return false
 	}
 
 	// we're going to push the element to be rid of to the top
-	item.Time = vrtime.ZeroTime()
-	heap.Fix(p.itemHeap, item.index)
+	element.Time = vrtime.ZeroTime()
+	heap.Fix(p.itemHeap, element.index)
 
-	// now pop it off
-	p.Pop()
+	// pop it off
+	popped := heap.Pop(p.itemHeap).(*item)
+	delete(p.lookup, popped.itemID)
+
 	p.mu.Unlock()
 	return true
 }
