@@ -90,6 +90,7 @@ type Event struct {
 	// be used to subsequently access or delete the event.
 	// It is permanantly assigned when the event is scheduled.
 	EventID int
+	Cancel bool
 }
 
 // An EventManager structure holds information needed
@@ -277,8 +278,9 @@ func (evtmgr *EventManager) Run(LimitTime float64) {
 			evtmgr.EventID = event.EventID // remember the eventId while we can, before the event disappears
 
 			// dispatch the event using the information carried along by the event
-			event.EventHandler(evtmgr, event.Context, event.Data)
-
+			if !event.Cancel {
+				event.EventHandler(evtmgr, event.Context, event.Data)
+			}
 		}
 
 		if evtmgr.External {
@@ -419,6 +421,16 @@ func (evtmgr *EventManager) Schedule(context any, data any,
 func nxtEvt(queue *evtq.EventQueue) *Event {
 	event := queue.Pop().(*Event)
 	return event
+}
+
+// CancelEvent cancels the indicated event from the event list
+func (evtmgr *EventManager) CancelEvent(eventID int) bool {
+	item := evtmgr.EventList.GetItem(eventID)
+	if item != nil {
+		evt := item.(*Event)	
+		evt.Cancel = true
+	}
+	return item != nil
 }
 
 // RemoveEvent removes the indicated event from the event list,

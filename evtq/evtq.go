@@ -33,22 +33,23 @@ func New() *EventQueue {
 // Len returns the number of elements in the queue.
 func (p *EventQueue) Len() int {
 	p.mu.Lock()
+	defer p.mu.Unlock()
 	rtn := p.itemHeap.Len()
-	p.mu.Unlock()
 	return rtn
 }
 
 // MinTime returns the Time associated with the next event.
 func (p *EventQueue) MinTime() vrtime.Time {
 	p.mu.Lock()
+	defer p.mu.Unlock()
 	rtn := (*p.itemHeap)[0].Time
-	p.mu.Unlock()
 	return rtn
 }
 
 // Insert inserts a new element into the queue. No action is performed on duplicate elements.
 func (p *EventQueue) Insert(v any, time vrtime.Time) int {
 	p.mu.Lock()
+	defer p.mu.Unlock()
 	p.evtID++
 
 	// update maximum time of inserted event
@@ -74,7 +75,6 @@ func (p *EventQueue) Insert(v any, time vrtime.Time) int {
 	heap.Push(p.itemHeap, newItem)
 	p.lookup[p.evtID] = newItem
 	rtn := p.evtID
-	p.mu.Unlock()
 	return rtn
 }
 
@@ -82,10 +82,11 @@ func (p *EventQueue) Insert(v any, time vrtime.Time) int {
 // In case of an empty queue, an error is returned.
 func (p *EventQueue) Pop() any {
 	p.mu.Lock()
+	defer p.mu.Unlock()
+
 	popped := heap.Pop(p.itemHeap).(*item)
 	delete(p.lookup, popped.itemID)
 	rtn := popped.Value
-	p.mu.Unlock()
 	return rtn
 }
 
@@ -93,25 +94,34 @@ func (p *EventQueue) Pop() any {
 // If the specified item is not present in the queue, no action is performed.
 func (p *EventQueue) UpdateTime(evtID int, newTime vrtime.Time) {
 	p.mu.Lock()
+	defer p.mu.Unlock()
 	item, present := p.lookup[evtID]
-	p.mu.Unlock()
 
 	if !present {
 		return
 	}
 
 	item.Time = newTime
-	p.mu.Lock()
 	heap.Fix(p.itemHeap, item.index)
-	p.mu.Unlock()
 }
+
+func (p *EventQueue) GetItem(evtID int) any {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	_, present := p.lookup[evtID]
+	if !present {
+		return nil
+	}
+	return p.lookup[evtID]
+}
+
 
 // Remove an element. Returns true on success.
 func (p *EventQueue) Remove(evtID int) bool {
 	p.mu.Lock()
+	defer p.mu.Unlock()
 	element, present := p.lookup[evtID]
 	if !present {
-		p.mu.Unlock()
 		return false
 	}
 
@@ -122,8 +132,6 @@ func (p *EventQueue) Remove(evtID int) bool {
 	// pop it off
 	popped := heap.Pop(p.itemHeap).(*item)
 	delete(p.lookup, popped.itemID)
-
-	p.mu.Unlock()
 	return true
 }
 
@@ -136,6 +144,7 @@ type item struct {
 	Value  any         // completely general payload for the item
 	Time   vrtime.Time // the field used to order the elements
 	index  int         // the position of the item in the (heap-organized) slice of events
+	Cancel bool        // has been marked for removal 
 }
 
 // Len, Less, Swap, Push, and Pop are funcs required for a
