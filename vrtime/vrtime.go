@@ -116,6 +116,13 @@ func SecondsToTime(v float64) Time {
 	return Time{TickCnt: ticks, Priority: int64(0)}
 }
 
+// SecondsToTime converts a fractional number of seconds into
+// an equivalent [Time] value. The returned Priority is 0.
+func SecondsToTimePri(v float64, pri int64) Time {
+	ticks := SecondsToTicks(v)
+	return Time{TickCnt: ticks, Priority: pri}
+}
+
 // SecondsToTicks converts a fractional number of seconds
 // into a whole number of ticks.
 func SecondsToTicks(v float64) int64 {
