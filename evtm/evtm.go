@@ -90,6 +90,7 @@ type Event struct {
 	// be used to subsequently access or delete the event.
 	// It is permanantly assigned when the event is scheduled.
 	EventID int
+
 	Cancel bool
 }
 
@@ -105,6 +106,7 @@ type EventManager struct {
 	EventList *evtq.EventQueue // order events
 	Time      vrtime.Time      // time of last event pulled off the EventList (but not necessarily yet executed completely)
 	EventID   int              // identifier needed if we aim to remove events from EventList
+	NumEvts   int		       // number of events executed by the event manager
 	RunFlag   bool             // indicate whether the EventManager is actively in use right now
 	Wallclock bool             // scale virtual time advance to wallclock time, approximately
 	StartTime time.Time        // wallclock time at time of first event
@@ -280,6 +282,7 @@ func (evtmgr *EventManager) Run(LimitTime float64) {
 			// dispatch the event using the information carried along by the event
 			if !event.Cancel {
 				event.EventHandler(evtmgr, event.Context, event.Data)
+				evtmgr.NumEvts += 1
 			}
 		}
 
