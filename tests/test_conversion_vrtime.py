@@ -3,6 +3,7 @@ import subprocess
 import numpy as np
 import sys
 import os
+# this makes vrtime visible to us
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../vrtime')))
 import vrtime
 
@@ -12,8 +13,7 @@ class TestVrTimeGoPythonEquivalence(unittest.TestCase):
     def run_go(self, *args):
         result = subprocess.run([GO_CLI] + [str(a) for a in args], capture_output=True, text=True)
         if result.returncode != 0:
-            print(f"Go CLI output: {result.stdout}")
-            raise RuntimeError(f"Go CLI error: {result.stderr}")
+            raise RuntimeError(f"Go CLI error: {result.stderr}, Go CLI output: {result.stdout}")
         return result.stdout.strip()
 
     def test_TicksToSeconds(self):
@@ -37,6 +37,7 @@ class TestVrTimeGoPythonEquivalence(unittest.TestCase):
     def test_SetTicksPerSecond(self):
         tps = np.int64(1e7)
         py = vrtime.set_ticks_per_second(tps)
+        # function configured to return saved ticks per second value
         goTps = self.run_go("SetTicksPerSecond", tps)
         self.assertEqual(vrtime.TicksPerSecond, int(goTps))
         # Reset to default after test
@@ -102,44 +103,69 @@ class TestVrTimeGoPythonEquivalence(unittest.TestCase):
     def test_EQ(self):
         t1 = vrtime.create_time(np.int64(5), np.int64(1))
         t2 = vrtime.create_time(np.int64(5), np.int64(1))
+        t3 = vrtime.create_time(np.int64(6), np.int64(1))
         py = t1.EQ(t2)
         go = self.run_go("EQ", t1.TickCnt, t1.Priority, t2.TickCnt, t2.Priority)
+        py2 = t1.EQ(t3)
+        go2 = self.run_go("EQ", t1.TickCnt, t1.Priority, t3.TickCnt, t3.Priority)
         self.assertEqual(str(py).lower(), go.lower())
+        self.assertEqual(str(py2).lower(), go2.lower())
 
     def test_GE(self):
         t1 = vrtime.create_time(np.int64(6), np.int64(1))
         t2 = vrtime.create_time(np.int64(5), np.int64(1))
+        t3 = vrtime.create_time(np.int64(4), np.int64(1))
+        t4 = vrtime.create_time(np.int64(6), np.int64(2))
         py = t1.GE(t2)
         go = self.run_go("GE", t1.TickCnt, t1.Priority, t2.TickCnt, t2.Priority)
+        py2 = t3.GE(t1)
+        go2 = self.run_go("GE", t3.TickCnt, t3.Priority, t1.TickCnt, t1.Priority)
+        py3 = t1.GE(t4)
+        go3 = self.run_go("GE", t1.TickCnt, t1.Priority, t4.TickCnt, t4.Priority)
         self.assertEqual(str(py).lower(), go.lower())
+        self.assertEqual(str(py2).lower(), go2.lower())
+        self.assertEqual(str(py3).lower(), go3.lower())
 
     def test_GT(self):
         t1 = vrtime.create_time(np.int64(6), np.int64(1))
         t2 = vrtime.create_time(np.int64(5), np.int64(1))
         py = t1.GT(t2)
         go = self.run_go("GT", t1.TickCnt, t1.Priority, t2.TickCnt, t2.Priority)
+        py2 = t2.GT(t1)
+        go2 = self.run_go("GT", t2.TickCnt, t2.Priority, t1.TickCnt, t1.Priority)
         self.assertEqual(str(py).lower(), go.lower())
+        self.assertEqual(str(py2).lower(), go2.lower())
 
     def test_LE(self):
         t1 = vrtime.create_time(np.int64(5), np.int64(1))
         t2 = vrtime.create_time(np.int64(6), np.int64(1))
+        t3 = vrtime.create_time(np.int64(5), np.int64(2))
         py = t1.LE(t2)
         go = self.run_go("LE", t1.TickCnt, t1.Priority, t2.TickCnt, t2.Priority)
+        py2 = t3.LE(t1)
+        go2 = self.run_go("LE", t3.TickCnt, t3.Priority, t1.TickCnt, t1.Priority)
         self.assertEqual(str(py).lower(), go.lower())
+        self.assertEqual(str(py2).lower(), go2.lower())
 
     def test_LT(self):
         t1 = vrtime.create_time(np.int64(5), np.int64(1))
         t2 = vrtime.create_time(np.int64(6), np.int64(1))
         py = t1.LT(t2)
         go = self.run_go("LT", t1.TickCnt, t1.Priority, t2.TickCnt, t2.Priority)
+        py2 = t2.LT(t1)
+        go2 = self.run_go("LT", t2.TickCnt, t2.Priority, t1.TickCnt, t1.Priority)
         self.assertEqual(str(py).lower(), go.lower())
+        self.assertEqual(str(py2).lower(), go2.lower())
 
     def test_NEQ(self):
         t1 = vrtime.create_time(np.int64(5), np.int64(1))
         t2 = vrtime.create_time(np.int64(6), np.int64(1))
         py = t1.NEQ(t2)
         go = self.run_go("NEQ", t1.TickCnt, t1.Priority, t2.TickCnt, t2.Priority)
+        py2 = t1.NEQ(t1)
+        go2 = self.run_go("NEQ", t1.TickCnt, t1.Priority, t1.TickCnt, t1.Priority)
         self.assertEqual(str(py).lower(), go.lower())
+        self.assertEqual(str(py2).lower(), go2.lower())
 
     def test_Plus(self):
         t1 = vrtime.create_time(np.int64(5), np.int64(3))
