@@ -1,5 +1,4 @@
 import unittest
-# this makes vrtime visible to us
 import evt.vrtime as vrtime
 from evt.evtq import EventQueue
 
