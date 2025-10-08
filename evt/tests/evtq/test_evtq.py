@@ -1,11 +1,7 @@
 import unittest
-import sys
-import os
 # this makes vrtime visible to us
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../vrtime')))
-import vrtime
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../evtq')))
-from evtq import EventQueue
+import evt.vrtime as vrtime
+from evt.evtq import EventQueue
 
 class TestEventQueuePython(unittest.TestCase):
     def setUp(self):

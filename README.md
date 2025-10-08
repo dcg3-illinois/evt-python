@@ -1,5 +1,5 @@
 # evt
-Discrete event simulator
+Discrete event simulator converted to python
 
 # evt
 
@@ -27,6 +27,22 @@ Package vrtime defines and manages virtual time inside a simulator.
 Time is tracked as an integral number of ticks since
 the epoch, along with a secondary sort value to provide for
 deterministic order among simultaneous events.
+
+## Running tests
+
+To run tests, allow `setup.sh` and `run_tests.sh` to be executable:
+
+`chmod +x setup.sh`
+
+`chmod +x run_tests.sh`
+
+Then run `setup.sh` to create and activate the virtual environment and install dependencies
+
+`source setup.sh`
+
+Finally, run `run_tests.sh` to run the tests
+
+`./run_tests.sh`
 
 Copyright 2024 Board of Trustees of the University of Illinois.
 See [the license](LICENSE) for details.

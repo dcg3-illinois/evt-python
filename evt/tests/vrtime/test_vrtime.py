@@ -1,9 +1,6 @@
 import unittest
 import numpy as np
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../vrtime')))
-import vrtime
+import evt.vrtime as vrtime
 
 class TestVrTime(unittest.TestCase):
     def setUp(self):

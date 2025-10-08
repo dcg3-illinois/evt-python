@@ -8,7 +8,7 @@
 import heapq
 import threading
 from typing import Any, Dict, Optional
-import vrtime
+import evt.vrtime as vrtime
 
 
 # InvalidEventID will never be returned from EventQueue.Insert()

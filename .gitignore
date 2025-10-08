@@ -1,7 +1,19 @@
 # If you prefer the allow list template instead of the deny list, see community template:
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
-# Binaries for programs and plugins
+
+# ingnore everything
+*
+
+# don't ignore directories
+!*/
+
+venv/
+
+# don't ignore files with extensions
+!*.*
+
+# do ignore binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
