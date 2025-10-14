@@ -126,7 +126,7 @@ class EventQueue:
             self.lookup.pop(popped.itemID, None)
             return popped.Value
 
-    def UpdateTime(self, evtID: int, newTime: 'vrtime.Time'):
+    def UpdateTime(self, evtID: int, newTime: vrtime.Time):
         """UpdateTime changes the priority of a given item. If the specified item is not present in the queue, no action is performed."""
         with self.mu:
             item = self.lookup.get(evtID)

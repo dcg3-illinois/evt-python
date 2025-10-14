@@ -1,11 +1,8 @@
 import unittest
 import subprocess
-import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../evtq')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../vrtime')))
-import vrtime
-import evtq
+import evt.vrtime as vrtime
+import evt.evtq as evtq
 
 GO_CLI = os.path.abspath(os.path.join(os.path.dirname(__file__), 'go_evtq_compare'))
 

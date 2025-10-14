@@ -7,11 +7,12 @@ package evtm
 
 import (
 	"fmt"
-	"github.com/iti/evt/evtq"
-	"github.com/iti/evt/vrtime"
 	"log"
 	"sync"
 	"time"
+
+	"github.com/iti/evt/evtq"
+	"github.com/iti/evt/vrtime"
 )
 
 // This logic is built around the EventManager data structure.
@@ -106,7 +107,7 @@ type EventManager struct {
 	EventList *evtq.EventQueue // order events
 	Time      vrtime.Time      // time of last event pulled off the EventList (but not necessarily yet executed completely)
 	EventID   int              // identifier needed if we aim to remove events from EventList
-	NumEvts   int		       // number of events executed by the event manager
+	NumEvts   int              // number of events executed by the event manager
 	RunFlag   bool             // indicate whether the EventManager is actively in use right now
 	Wallclock bool             // scale virtual time advance to wallclock time, approximately
 	StartTime time.Time        // wallclock time at time of first event
@@ -430,7 +431,7 @@ func nxtEvt(queue *evtq.EventQueue) *Event {
 func (evtmgr *EventManager) CancelEvent(eventID int) bool {
 	item := evtmgr.EventList.GetItem(eventID)
 	if item != nil {
-		evt := item.(*Event)	
+		evt := item.(*Event)
 		evt.Cancel = true
 	}
 	return item != nil

@@ -242,8 +242,7 @@ class EventManager:
         """Cancels the indicated event from the event list."""
         item = self.EventList.GetItem(event_id)
         if item is not None:
-            evt = item  # Should be Event
-            evt.Cancel = True
+            item.Value.Cancel = True
         return item is not None
 
     def remove_event(self, event_id):

@@ -122,6 +122,10 @@ class Time:
         if tPri > aPri:
             return Time(ticks, tPri)
         return Time(ticks, aPri)
+    
+    def copy(self) -> 'Time':
+        """Returns a new Time instance with the same TickCnt and Priority."""
+        return Time(self.TickCnt, self.Priority)
 
 
 # Utility functions

@@ -1,11 +1,9 @@
 import unittest
 import subprocess
 import numpy as np
-import sys
 import os
 # this makes vrtime visible to us
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../vrtime')))
-import vrtime
+import evt.vrtime as vrtime
 
 GO_CLI = os.path.abspath(os.path.join(os.path.dirname(__file__), 'go_vrtime_compare'))
 
