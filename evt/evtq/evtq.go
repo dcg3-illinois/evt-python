@@ -5,8 +5,9 @@ package evtq
 
 import (
 	"container/heap"
-	"github.com/iti/evt/vrtime"
 	"sync"
+
+	"github.com/iti/evt/vrtime"
 )
 
 // InvalidEventID will never be returned from
@@ -115,6 +116,15 @@ func (p *EventQueue) GetItem(evtID int) any {
 	return p.lookup[evtID]
 }
 
+func (p *EventQueue) GetValue(evtID int) any {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	_, present := p.lookup[evtID]
+	if !present {
+		return nil
+	}
+	return p.lookup[evtID].Value
+}
 
 // Remove an element. Returns true on success.
 func (p *EventQueue) Remove(evtID int) bool {
@@ -144,7 +154,7 @@ type item struct {
 	Value  any         // completely general payload for the item
 	Time   vrtime.Time // the field used to order the elements
 	index  int         // the position of the item in the (heap-organized) slice of events
-	Cancel bool        // has been marked for removal 
+	Cancel bool        // has been marked for removal
 }
 
 // Len, Less, Swap, Push, and Pop are funcs required for a

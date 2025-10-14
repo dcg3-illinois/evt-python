@@ -429,7 +429,7 @@ func nxtEvt(queue *evtq.EventQueue) *Event {
 
 // CancelEvent cancels the indicated event from the event list
 func (evtmgr *EventManager) CancelEvent(eventID int) bool {
-	item := evtmgr.EventList.GetItem(eventID)
+	item := evtmgr.EventList.GetValue(eventID)
 	if item != nil {
 		evt := item.(*Event)
 		evt.Cancel = true
